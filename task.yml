@@ -1,0 +1,19 @@
+---
+- name: install nginx
+  hosts: test
+  become: yes
+
+  tasks:
+  - name: install nginx
+    yum: name=nginx state=latest
+   
+  - name: create http
+    copy: src=static_files/index.html dest=/usr/share/nginx/www/ mode=0644
+    notify: restart nginx
+     
+  - name: start server
+    service: name=nginx state=started enabled=yes
+
+  handlers:
+  - name: restart nginx
+    service: name=nginx state=restarted
